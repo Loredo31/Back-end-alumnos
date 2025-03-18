@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 
+
 // Función para generar la matrícula automáticamente
 function generarMatricula(apellidoPaterno) {
   const year = new Date().getFullYear().toString().slice(2);  // Últimos 2 dígitos del año
@@ -68,6 +69,7 @@ const alumnoSchema = new mongoose.Schema({
   certificado_bachillerato: { type: Number, default: 0 }  // 1 para "Sí", 0 para "No"
 });
 
+
 // Middleware para generar la matrícula y el RFC antes de guardar
 alumnoSchema.pre('save', function (next) {
   if (this.isNew) {
@@ -79,6 +81,7 @@ alumnoSchema.pre('save', function (next) {
   }
   next();
 });
+
 
 const Alumno = mongoose.model('Alumno', alumnoSchema);
 

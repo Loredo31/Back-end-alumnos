@@ -15,3 +15,4 @@ router.get('/alumnos/:id', obtenerAlumno);
 router.put('/alumnos/:id', actualizarAlumno);
 
 module.exports = router;
+

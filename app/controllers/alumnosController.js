@@ -10,8 +10,9 @@ const crearAlumno = async (req, res) => {
   }
 
   try {
-    // Crear un nuevo alumno, sin pasar la matrícula ni el RFC ya que se generan automáticamente
+    // Crear un nuevo alumno
     const nuevoAlumno = new Alumno({
+      matricula: resto.matricula, // Asigna la matrícula en el formato requerido
       foto: resto.foto,
       apellido_paterno,
       apellido_materno,
@@ -23,6 +24,7 @@ const crearAlumno = async (req, res) => {
       correos: correo,  // Correos en formato array
       promedio_bachillerato: resto.promedio_bachillerato,  // Valor de promedio
       especialidad_bachillerato: resto.especialidad_bachillerato,  // Especialidad de bachillerato
+      rfc: resto.rfc,  // RFC generado, ajustarlo si es necesario
       rol: 1,  // Definir el rol como Administrador (1)
       contrasenia,
       domicilio: {
@@ -80,7 +82,7 @@ const obtenerAlumno = async (req, res) => {
   }
 };
 
-// 🔹 Actualizar perfil del alumno
+// Función para actualizar perfil del alumno
 const actualizarAlumno = async (req, res) => {
   const { id } = req.params; // Obtener la matrícula del alumno
   const { telefonos, correos, contrasenia, domicilio } = req.body;
@@ -103,8 +105,6 @@ const actualizarAlumno = async (req, res) => {
   }
 };
 
-
-
 // Obtener todos los alumnos
 const obtenerAlumnos = async (req, res) => {
   try {
@@ -120,4 +120,3 @@ const obtenerAlumnos = async (req, res) => {
 };
 
 module.exports = { crearAlumno, obtenerAlumno, actualizarAlumno, obtenerAlumnos };
-
