@@ -3,11 +3,11 @@ const bcrypt = require('bcryptjs');
 
 // Función para crear un nuevo alumno
 const crearAlumno = async (req, res) => {
-  const { nombre, apellido_paterno, apellido_materno, fecha_nacimiento, sexo, correo, matricula, contrasenia, ...resto } = req.body;
+  const { nombre, apellido_paterno, apellido_materno, fecha_nacimiento, sexo, correo, contrasenia, ...resto } = req.body;
 
   // Verifica si los campos requeridos están presentes
-  if (!matricula || !nombre || !apellido_paterno || !apellido_materno) {
-   return res.status(400).json({ message: 'Faltan campos obligatorios' });
+  if (!nombre || !apellido_paterno || !apellido_materno || !fecha_nacimiento || !sexo) {
+    return res.status(400).json({ message: 'Faltan campos obligatorios' });
   }
 
   try {
@@ -15,13 +15,14 @@ const crearAlumno = async (req, res) => {
     const salt = await bcrypt.genSalt(10);  // Generar un salt con 10 rondas
     const contraseniaHasheada = await bcrypt.hash(contrasenia, salt);  // Hashear la contraseña
 
+    // Crear un nuevo alumno
     const nuevoAlumno = new Alumno({
-      matricula, // Asigna la matrícula en el formato requerido
+      matricula: resto.matricula, // Asigna la matrícula en el formato requerido
       foto: resto.foto,
       apellido_paterno,
       apellido_materno,
       nombre,
-      fecha_alta: new Date(),
+      fecha_alta: new Date(),  // Fecha de alta asignada automáticamente
       fecha_nacimiento,
       sexo,
       telefonos: resto.telefonos,  // Se pueden incluir múltiples teléfonos
@@ -47,7 +48,10 @@ const crearAlumno = async (req, res) => {
       certificado_bachillerato: resto.certificado_bachillerato ? 1 : 0  // Certificado de bachillerato (1 para sí, 0 para no)
     });
 
+    // Guardar el alumno en la base de datos
     await nuevoAlumno.save();
+
+    // Devolver la respuesta con el alumno creado (incluyendo la matrícula y el RFC generados)
     res.status(201).json(nuevoAlumno);
   } catch (error) {
     console.error('Error al registrar alumno:', error);
