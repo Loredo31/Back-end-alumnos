@@ -1,4 +1,5 @@
 const Alumno = require('../models/alumnosModel');
+const bcrypt = require('bcryptjs');
 
 // Función para crear un nuevo alumno
 const crearAlumno = async (req, res) => {
@@ -10,6 +11,10 @@ const crearAlumno = async (req, res) => {
   }
 
   try {
+    // Hashear la contraseña
+    const salt = await bcrypt.genSalt(10);  // Generar un salt con 10 rondas
+    const contraseniaHasheada = await bcrypt.hash(contrasenia, salt);  // Hashear la contraseña
+
     const nuevoAlumno = new Alumno({
       matricula, // Asigna la matrícula en el formato requerido
       foto: resto.foto,
@@ -25,7 +30,7 @@ const crearAlumno = async (req, res) => {
       especialidad_bachillerato: resto.especialidad_bachillerato,  // Especialidad de bachillerato
       rfc: resto.rfc,  // RFC generado, ajustarlo si es necesario
       rol: 1,  // Definir el rol como Administrador (1)
-      contrasenia,
+      contrasenia:contraseniaHasheada,
       domicilio: {
         calle: resto.domicilio.calle,
         numero_interior: resto.domicilio.numero_interior,
@@ -52,6 +57,55 @@ const crearAlumno = async (req, res) => {
       stack: error.stack     // Devuelve el stack trace para obtener más detalles
     });
   }
+}
+
+  // Obtener todos los alumnos
+const obtenerAlumnos = async (req, res) => {
+  try {
+    const alumnos = await Alumno.find();
+    res.status(200).json(alumnos);
+  } catch (error) {
+    res.status(500).json({ message: 'Error al obtener los alumnos', error: error.message });
+  }
 };
 
-module.exports = { crearAlumno };
+// Obtener un alumno por ID
+const obtenerAlumnoPorId = async (req, res) => {
+  try {
+    const alumno = await Alumno.findById(req.params.id);
+    if (!alumno) return res.status(404).json({ message: 'Alumno no encontrado' });
+    res.status(200).json(alumno);
+  } catch (error) {
+    res.status(500).json({ message: 'Error al obtener el alumno', error: error.message });
+  }
+};
+
+// Actualizar un alumno por ID
+const actualizarAlumno = async (req, res) => {
+  try {
+    const alumnoActualizado = await Alumno.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    if (!alumnoActualizado) return res.status(404).json({ message: 'Alumno no encontrado' });
+    res.status(200).json(alumnoActualizado);
+  } catch (error) {
+    res.status(500).json({ message: 'Error al actualizar el alumno', error: error.message });
+  }
+};
+
+// Eliminar un alumno por ID
+const eliminarAlumno = async (req, res) => {
+  try {
+    const alumnoEliminado = await Alumno.findByIdAndDelete(req.params.id);
+    if (!alumnoEliminado) return res.status(404).json({ message: 'Alumno no encontrado' });
+    res.status(200).json({ message: 'Alumno eliminado correctamente' });
+  } catch (error) {
+    res.status(500).json({ message: 'Error al eliminar el alumno', error: error.message });
+  }
+};
+
+module.exports = {
+  crearAlumno,
+  obtenerAlumnos,
+  obtenerAlumnoPorId,
+  actualizarAlumno,
+  eliminarAlumno
+};
