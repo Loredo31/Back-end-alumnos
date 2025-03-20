@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 
-
 // Función para generar la matrícula automáticamente
 function generarMatricula(apellidoPaterno) {
   const year = new Date().getFullYear().toString().slice(2);  // Últimos 2 dígitos del año
@@ -38,7 +37,7 @@ const alumnoSchema = new mongoose.Schema({
   promedio_bachillerato: Number,
   especialidad_bachillerato: String,
   rfc: String,
-  rol: { type: Number, default: 5 },
+  rol: { type: Number, default: 1 },
   contrasenia: String,
   domicilio: {
     calle: String,
