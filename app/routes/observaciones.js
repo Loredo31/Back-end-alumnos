@@ -11,4 +11,7 @@ router.post('/', observacionesController.agregarObservacion);
 // Ruta para eliminar una observación por su ID
 router.delete('/:id', observacionesController.eliminarObservacion);
 
+// Ruta para obtener observaciones con filtros (por materia y/o profesor)
+router.get('/', observacionesController.obtenerObservacionesPorFiltro);
+
 module.exports = router;
