@@ -18,6 +18,10 @@ exports.obtenerObservacionesPorProfesor = async (req, res) => {
 exports.agregarObservacion = async (req, res) => {
   const { teacherId, teacherName, studentName, subject, semester, year, description } = req.body;
 
+  if (!teacherId || !teacherName) {
+    return res.status(400).json({ message: 'El profesor es obligatorio' });
+  }
+
   try {
     // Crear un nuevo objeto de observación con los datos recibidos
     const nuevaObservacion = new Observacion({
@@ -57,3 +61,30 @@ exports.eliminarObservacion = async (req, res) => {
     res.status(500).json({ message: 'Error al eliminar la observación', error: error.message });
   }
 };
+
+
+// Agregar la lógica para buscar observaciones con filtros
+exports.obtenerObservacionesPorFiltro = async (req, res) => {
+  const { subject, teacherName } = req.query; // Obtener los filtros desde la query string
+  
+  const filter = {};  // Crear un objeto vacío para los filtros
+
+  if (subject) {
+    filter.subject = { $regex: subject, $options: 'i' }; // Filtrar por materia (insensible a mayúsculas/minúsculas)
+  }
+  
+  if (teacherName) {
+    filter.teacherName = { $regex: teacherName, $options: 'i' }; // Filtrar por nombre del profesor (insensible a mayúsculas/minúsculas)
+  }
+
+  try {
+    // Buscar observaciones con los filtros aplicados
+    const observaciones = await Observacion.find(filter);
+    res.status(200).json(observaciones);
+  } catch (error) {
+    console.error('Error al obtener observaciones:', error);
+    res.status(500).json({ message: 'Error al obtener las observaciones', error: error.message });
+  }
+};
+
+
