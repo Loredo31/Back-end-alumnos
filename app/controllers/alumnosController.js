@@ -111,5 +111,5 @@ module.exports = {
   obtenerAlumnos,
   obtenerAlumnoPorId,
   actualizarAlumno,
-  eliminarAlumno
+  eliminarAlumno,
 };

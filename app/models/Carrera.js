@@ -7,3 +7,6 @@ const CarreraSchema = new mongoose.Schema({
 });
 
 module.exports = mongoose.model('Carrera', CarreraSchema);
+
+
+
