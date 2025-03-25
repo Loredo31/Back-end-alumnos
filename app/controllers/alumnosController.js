@@ -3,7 +3,7 @@ const bcrypt = require('bcryptjs');
 
 // Función para crear un nuevo alumno
 const crearAlumno = async (req, res) => {
-  const { nombre, apellido_paterno, apellido_materno, fecha_nacimiento, sexo, correo, contrasenia, ...resto } = req.body;
+  const { nombre,foto, apellido_paterno, apellido_materno, fecha_nacimiento, sexo, correos, contrasenia, ...resto } = req.body;
 
   // Verifica si los campos requeridos están presentes
   if (!nombre || !apellido_paterno || !apellido_materno || !fecha_nacimiento || !sexo) {
@@ -18,7 +18,7 @@ const crearAlumno = async (req, res) => {
     // Crear un nuevo alumno
     const nuevoAlumno = new Alumno({
       matricula: resto.matricula, // Asigna la matrícula en el formato requerido
-      foto: resto.foto,
+      foto: foto,
       apellido_paterno,
       apellido_materno,
       nombre,
@@ -26,7 +26,7 @@ const crearAlumno = async (req, res) => {
       fecha_nacimiento,
       sexo,
       telefonos: resto.telefonos,  // Se pueden incluir múltiples teléfonos
-      correos: correo,  // Correos en formato array
+      correos: correos,  // Correos en formato array
       promedio_bachillerato: resto.promedio_bachillerato,  // Valor de promedio
       especialidad_bachillerato: resto.especialidad_bachillerato,  // Especialidad de bachillerato
       rfc: resto.rfc,  // RFC generado, ajustarlo si es necesario

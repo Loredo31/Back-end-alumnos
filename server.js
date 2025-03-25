@@ -16,6 +16,7 @@ conectarDB();
 // Middleware
 app.use(express.json());  // Para manejar solicitudes con JSON
 app.use(cors());  // Para habilitar CORS y permitir peticiones desde otros dominios
+app.use(express.json({ limit: '500mb' })); 
 app.use("/api", alumnosRoutes);
 app.use("/api", profesorExtRoutes);
 app.use("/api", login);
