@@ -32,8 +32,8 @@ const alumnoSchema = new mongoose.Schema({
       apellido_paterno: String,
       apellido_materno: String,
       nombre: String,
-      telefono: [String],
-      correo: String,
+      telefonos: [String],
+      correos: [String],
       domicilio: {
         calle: String,
         numero_exterior: String,
