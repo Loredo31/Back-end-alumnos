@@ -63,16 +63,22 @@ exports.eliminarObservacion = async (req, res) => {
 };
 
 
+
 // Agregar la lógica para buscar observaciones con filtros
+// Controlador para obtener observaciones filtradas por estudiante
 exports.obtenerObservacionesPorFiltro = async (req, res) => {
-  const { subject, teacherName } = req.query; // Obtener los filtros desde la query string
-  
+  const { studentName, subject, teacherName } = req.query; // Obtener los filtros desde la query string
+
   const filter = {};  // Crear un objeto vacío para los filtros
+
+  if (studentName) {
+    filter.studentName = { $regex: studentName, $options: 'i' }; // Filtrar por nombre de estudiante (insensible a mayúsculas/minúsculas)
+  }
 
   if (subject) {
     filter.subject = { $regex: subject, $options: 'i' }; // Filtrar por materia (insensible a mayúsculas/minúsculas)
   }
-  
+
   if (teacherName) {
     filter.teacherName = { $regex: teacherName, $options: 'i' }; // Filtrar por nombre del profesor (insensible a mayúsculas/minúsculas)
   }
@@ -82,8 +88,8 @@ exports.obtenerObservacionesPorFiltro = async (req, res) => {
     const observaciones = await Observacion.find(filter);
     res.status(200).json(observaciones);
   } catch (error) {
-    console.error('Error al obtener observaciones:', error);
-    res.status(500).json({ message: 'Error al obtener las observaciones', error: error.message });
+    console.error('Error al buscar las observaciones con filtro:', error);
+    res.status(500).json({ message: 'Error al buscar las observaciones', error: error.message });
   }
 };
 
